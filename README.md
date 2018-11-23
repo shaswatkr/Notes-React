@@ -7,4 +7,4 @@ Used 2 var:
 1) Notes - to display and manipulate notes data.
 2) Board - to display and manipulate actual notes.
 
-Main file is rc\demos\00_template\index.html containing all the codes.
+Main file is "rc\demos\00_template\index.html" containing all the codes.
