@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>React - Template</title>
+        <link rel="stylesheet" type="text/css" href="../../css/main.css">
+        <script src="../../js/react.min.js"></script>
+        <script src="../../js/react-dom.min.js"></script>
+        <script src="../../js/browser.min.js"></script>
+    </head>
+
+    <body>
+
+        <div id="container"> </div>
+		
+		<script type="text/babel">
+
+// -------------------------------------------------------------- Notes React starts from here -----------------------------------------------------------------------------------//
+			const Notes = React.createClass({
+
+				getInitialState: function() {
+					return {editing: false};
+				},
+
+				edit: function () {
+					this.setState({editing: true});
+				},
+
+				remove: function() {
+					this.props.del(this.props.index);
+				},
+
+				save: function () {
+					this.props.upd(this.refs.texty.value, this.props.index);
+					this.setState({editing: false});
+				},
+
+				renderNote: function() {
+					return (
+							<div className="commentContainer">
+								<div className="commentText"> {this.props.children} </div>
+								<button onClick={this.edit} className="button-primary"> Edit </button>
+								<button onClick={this.remove} className="button-danger"> Remove </button>
+							</div>
+					);
+				},
+
+				renderEdit: function() {
+					return (
+							<div className="commentContainer">
+                                <textarea ref="texty"> </textarea>
+                                <button onClick={this.save} className="button-success"> Save </button>
+							</div>
+					);
+				},
+
+				render: function()
+				{
+					if(this.state.editing)
+						return this.renderEdit();
+					else
+						return this.renderNote();
+				}
+			});
+
+
+//--------------------------------------------------------------- Board React starts from here -----------------------------------------------------------------------------------//
+			const Board = React.createClass({
+
+				getInitialState: function () {
+					return {
+						comment: [],
+                        in: 1
+					}
+				},
+
+                add: function(text) {
+				    let arr = this.state.comment;
+				    arr.push(text);
+				    this.setState({in: arr.length + 1});
+				    this.setState({comment: arr});
+                },
+
+                update: function(newText, i) {
+				    let arr = this.state.comment;
+				    arr[i] = newText;
+				    this.setState({comment: arr});
+                },
+
+                delete: function(i) {
+				    let arr = this.state.comment;
+				    arr.splice(i,1);
+				    this.setState({comment: arr});
+                },
+
+				looping: function(value, i) {
+                    return (
+                            <Notes key={i} index={i} del={this.delete} upd={this.update}>
+                                {value}
+                            </Notes>);
+				},
+
+				render: function() {
+					return (
+							<div>
+                                <button onClick={this.add.bind(null, "Note (" +this.state.in+")")} className="button-info create"> Create New Note </button>
+                                <div className="board">
+                                    {this.state.comment.map(this.looping)}
+                                </div>
+                            </div>
+					);
+				}
+			});
+
+			ReactDOM.render(<Board />,document.getElementById("container"));
+			
+		</script>
+    </body>  </html>
